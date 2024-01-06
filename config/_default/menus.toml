@@ -21,6 +21,7 @@
     name = "Tags"
     url = "/tags"
     weight = 4
+
     
 # Social Media Configuration
 
