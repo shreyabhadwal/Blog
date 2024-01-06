@@ -358,10 +358,6 @@
     @apply flex flex-row items-center justify-between;
   }
 
-  .header .toggle-theme {
-    @apply w-6 h-6;
-  }
-
   .title-large {
     @apply text-4xl leading-snug font-bold text-gray-900 dark:text-gray-300;
   }
