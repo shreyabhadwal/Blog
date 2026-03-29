@@ -1,0 +1,41 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: public/images
+public_folder: /images
+
+collections:
+  - name: posts
+    label: Writing
+    folder: src/content/posts
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Date, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: Description, name: description, widget: string }
+      - label: Tags
+        name: tags
+        widget: select
+        multiple: true
+        options: [career, books, culture, notes]
+      - { label: Draft, name: draft, widget: boolean, default: false }
+      - { label: Body, name: body, widget: markdown }
+
+  - name: lately
+    label: Lately
+    folder: src/content/lately
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Date, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: Draft, name: draft, widget: boolean, default: false }
+      - label: Links
+        name: links
+        widget: list
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: URL, name: url, widget: string }
+          - { label: Note, name: note, widget: text, required: false }
