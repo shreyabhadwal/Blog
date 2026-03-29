@@ -1,0 +1,180 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const tags = ['all', 'career', 'books', 'culture', 'notes'] as const;
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+---
+
+<Layout title="Writing">
+  <h1>Writing</h1>
+  <p class="subtitle">On tech, books, culture, and career.</p>
+
+  <div class="filters" id="filters">
+    {tags.map((tag) => (
+      <button class={`filter-btn ${tag === 'all' ? 'active' : ''}`} data-tag={tag}>
+        {tag === 'all' ? 'All' : tag.charAt(0).toUpperCase() + tag.slice(1)}
+      </button>
+    ))}
+  </div>
+
+  <ul class="post-list" id="post-list">
+    {posts.map((post) => (
+      <li data-tags={post.data.tags.join(',')}>
+        <a href={`/writing/${post.id}`} class="post-link">
+          <div class="post-left">
+            <span class="post-title">{post.data.title}</span>
+            <span class="post-description">{post.data.description}</span>
+          </div>
+          <div class="post-right">
+            <div class="post-tags">
+              {post.data.tags.map((tag) => (
+                <span class="post-tag">{tag}</span>
+              ))}
+            </div>
+            <span class="post-date">{formatDate(post.data.date)}</span>
+          </div>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Layout>
+
+<script>
+  const filters = document.getElementById('filters');
+  const postList = document.getElementById('post-list');
+
+  filters?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest('.filter-btn') as HTMLButtonElement | null;
+    if (!btn) return;
+
+    const tag = btn.dataset.tag;
+
+    filters.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    postList?.querySelectorAll('li').forEach((li) => {
+      const tags = li.dataset.tags?.split(',') ?? [];
+      li.style.display = tag === 'all' || tags.includes(tag!) ? '' : 'none';
+    });
+  });
+</script>
+
+<style>
+  h1 {
+    margin-bottom: 0.4rem;
+  }
+
+  .subtitle {
+    color: var(--color-muted);
+    margin-bottom: 2rem;
+  }
+
+  .filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .filter-btn {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-muted);
+    padding: 0.35em 0.85em;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover,
+  .filter-btn.active {
+    background: var(--color-accent);
+    color: #fff;
+    border-color: var(--color-accent);
+  }
+
+  .post-list {
+    list-style: none;
+  }
+
+  .post-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--color-border);
+    transition: opacity 0.15s;
+  }
+
+  .post-link:hover {
+    opacity: 0.6;
+  }
+
+  .post-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .post-title {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+  }
+
+  .post-description {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+
+  .post-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.35rem;
+    flex-shrink: 0;
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .post-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #7a2d3e;
+    background: #f3e0e3;
+    padding: 0.2em 0.6em;
+    border-radius: 2px;
+  }
+
+  .post-date {
+    font-size: 0.78rem;
+    color: var(--color-muted);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 500px) {
+    .post-link {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .post-right {
+      align-items: flex-start;
+    }
+  }
+</style>

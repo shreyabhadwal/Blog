@@ -1,0 +1,140 @@
+---
+import { Image } from 'astro:assets';
+import photo from '/src/assets/photo.jpg';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About">
+  <article class="about">
+    <div class="about-header">
+      <Image src={photo} alt="Shreya Bhadwal" class="avatar" width={192} height={192} />
+      <div>
+        <h1>Shreya Bhadwal</h1>
+        <p class="tagline">Based in India · Working in tech</p>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>
+        Hi, I'm Shreya. I work in tech and I write here about things I'm thinking through — career, books, culture, and whatever else catches my attention.
+      </p>
+
+      <p>
+        This is my digital garden: a place to think out loud, not a polished publication. Some things here are finished essays. Others are half-formed notes. Both are welcome.
+      </p>
+
+      <h2>What I write about</h2>
+      <ul>
+        <li><strong>Career</strong> — tech, work, and what comes next</li>
+        <li><strong>Books</strong> — what I'm reading and what it made me think</li>
+        <li><strong>Culture</strong> — pop culture, media, the stuff I can't stop talking about</li>
+        <li><strong>Notes</strong> — shorter, looser thoughts</li>
+      </ul>
+
+      <h2>Get in touch</h2>
+      <div class="contact">
+        <a href="mailto:shreya.bhadwal@gmail.com" class="contact-link">
+          <span class="contact-label">Email</span>
+          <span>shreya.bhadwal@gmail.com</span>
+        </a>
+        <a href="https://www.linkedin.com/in/shreya-bhadwal-05aa8b195/" target="_blank" rel="noopener" class="contact-link">
+          <span class="contact-label">LinkedIn</span>
+          <span>shreya-bhadwal</span>
+        </a>
+      </div>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .about-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: 95% 20%;
+    flex-shrink: 0;
+  }
+
+  .about-header h1 {
+    margin-bottom: 0.25rem;
+    font-size: 1.6rem;
+  }
+
+  .tagline {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .prose {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #2a2a2a;
+  }
+
+  .prose p {
+    margin-bottom: 1.4rem;
+  }
+
+  .prose h2 {
+    font-size: 1.2rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose ul {
+    padding-left: 1.4rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .prose li {
+    margin-bottom: 0.4rem;
+  }
+
+  .contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    transition: opacity 0.15s;
+  }
+
+  .contact-link:hover {
+    opacity: 0.65;
+  }
+
+  .contact-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    width: 60px;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 500px) {
+    .about-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
+</style>

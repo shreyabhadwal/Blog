@@ -1,11 +1,148 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import photo from '/src/assets/photo.jpg';
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+const recentPosts = allPosts
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 5);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
 ---
 
 <Layout>
-	<Welcome />
+  <section class="intro">
+    <Image src={photo} alt="Shreya Bhadwal" class="avatar" width={144} height={144} />
+    <div>
+      <h1>Hi, I'm Shreya!</h1>
+      <p class="tagline">Writings on tech, career, books, and whatever else is on my mind.</p>
+    </div>
+  </section>
+
+  <section class="recent">
+    <h2>Recent</h2>
+    <ul class="post-list">
+      {recentPosts.map((post) => (
+        <li>
+          <a href={`/writing/${post.id}`} class="post-link">
+            <span class="post-title">{post.data.title}</span>
+            <span class="post-meta">
+              <span class="post-tag">{post.data.tags[0]}</span>
+              <span class="post-date">{formatDate(post.data.date)}</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <a href="/writing" class="see-all">All writing →</a>
+  </section>
 </Layout>
+
+<style>
+  .intro {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 3.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: 95% 20%;
+    flex-shrink: 0;
+  }
+
+
+  .tagline {
+    color: var(--color-muted);
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .recent h2 {
+    font-size: 0.75rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .post-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .post-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--color-border);
+    transition: opacity 0.15s;
+  }
+
+  .post-link:hover {
+    opacity: 0.6;
+  }
+
+  .post-title {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .post-tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #7a2d3e;
+    background: #f3e0e3;
+    padding: 0.2em 0.6em;
+    border-radius: 2px;
+  }
+
+  .post-date {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    white-space: nowrap;
+  }
+
+  .see-all {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    transition: color 0.15s;
+  }
+
+  .see-all:hover {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 500px) {
+    .post-link {
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+  }
+</style>

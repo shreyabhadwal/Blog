@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const all = await getCollection('bulletins', ({ data }) => !data.draft);
+const entries = all.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+---
+
+<Layout title="Lately">
+  <h1>Lately</h1>
+  <p class="subtitle">Things I read each week — links and thoughts.</p>
+
+  <ul class="entries">
+    {entries.map((entry) => (
+      <li>
+        <a href={`/lately/${entry.id}`} class="entry-link">
+          <span class="entry-title">{entry.data.title}</span>
+          <span class="entry-meta">
+            <span class="entry-count">{entry.data.links.length} links</span>
+            <span class="entry-date">{formatDate(entry.data.date)}</span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Layout>
+
+<style>
+  h1 {
+    margin-bottom: 0.4rem;
+  }
+
+  .subtitle {
+    color: var(--color-muted);
+    margin-bottom: 2.5rem;
+  }
+
+  .entries {
+    list-style: none;
+  }
+
+  .entry-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--color-border);
+    transition: opacity 0.15s;
+  }
+
+  .entry-link:hover {
+    opacity: 0.6;
+  }
+
+  .entry-title {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+  }
+
+  .entry-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .entry-count {
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    background: #ede9e2;
+    padding: 0.2em 0.6em;
+    border-radius: 2px;
+  }
+
+  .entry-date {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+    white-space: nowrap;
+  }
+</style>

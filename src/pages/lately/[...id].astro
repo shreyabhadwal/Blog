@@ -1,0 +1,111 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('bulletins', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+---
+
+<Layout title={entry.data.title}>
+  <article>
+    <header>
+      <time>{formatDate(entry.data.date)}</time>
+      <h1>{entry.data.title}</h1>
+    </header>
+
+    <ul class="links">
+      {entry.data.links.map((link) => (
+        <li class="link-item">
+          <a href={link.url} target="_blank" rel="noopener" class="link-title">{link.title} ↗</a>
+          {link.note && <p class="link-note">{link.note}</p>}
+        </li>
+      ))}
+    </ul>
+
+    <footer class="page-footer">
+      <a href="/lately" class="back">← Back to Lately</a>
+    </footer>
+  </article>
+</Layout>
+
+<style>
+  header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  time {
+    font-size: 0.78rem;
+    color: var(--color-muted);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    margin-bottom: 0;
+  }
+
+  .links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .link-item {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .link-title {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--color-border);
+    transition: text-decoration-color 0.15s;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  .link-title:hover {
+    text-decoration-color: var(--color-accent);
+  }
+
+  .link-note {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #4a4a4a;
+    margin: 0;
+  }
+
+  .page-footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+  }
+
+  .back {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    transition: color 0.15s;
+  }
+
+  .back:hover {
+    color: var(--color-accent);
+  }
+</style>
