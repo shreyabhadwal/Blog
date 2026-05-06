@@ -6,6 +6,7 @@ import react from '@astrojs/react';
 
 export default defineConfig({
   site: 'https://shreyabhadwal.netlify.app',
+  output: 'server',
   adapter: netlify(),
   integrations: [react(), keystatic()],
 });
