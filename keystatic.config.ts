@@ -32,7 +32,6 @@ export default config({
       label: 'Lately',
       slugField: 'title',
       path: 'src/content/lately/*',
-      format: { data: 'yaml' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         date: fields.date({ label: 'Date' }),
