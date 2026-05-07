@@ -32,6 +32,7 @@ export default config({
       label: 'Lately',
       slugField: 'title',
       path: 'src/content/lately/*',
+      format: { contentField: 'content' },
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         date: fields.date({ label: 'Date' }),
@@ -44,6 +45,7 @@ export default config({
           { label: 'Links', itemLabel: props => props.fields.title.value }
         ),
         draft: fields.checkbox({ label: 'Draft', defaultValue: false }),
+        content: fields.emptyContent({ extension: 'md' }),
       },
     }),
   },
