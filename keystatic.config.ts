@@ -25,7 +25,7 @@ export default config({
           ],
         }),
         draft: fields.checkbox({ label: 'Draft', defaultValue: false }),
-        content: fields.markdoc({ label: 'Content' }),
+        content: fields.markdoc({ label: 'Content', extension: 'md' }),
       },
     }),
     bulletins: collection({
